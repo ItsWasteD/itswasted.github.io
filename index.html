@@ -15,7 +15,7 @@
         throw new Error(`Res: ${res.status}`);
       }
 
-      return response.json();
+      return res.json();
     }).then(json => {
       document.getElementById("data").innerHTML = json
     }).catch(error => {
