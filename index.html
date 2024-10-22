@@ -11,11 +11,11 @@
 <script>
   const url = "https://api.apis.guru/v2/list.json"
   try {
-    const res = await fetch(url)
+    const res = fetch(url)
     if (!res.ok) {
       throw new Error(`Res: ${res.status}`);
     }
-    const json = await response.json();
+    const json = response.json();
 
     document.getElementById("data").innerHTML = json
   } catch (e) {
