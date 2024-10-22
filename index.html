@@ -10,17 +10,17 @@
 <body>
 <script>
   const url = "https://api.apis.guru/v2/list.json"
-  try {
-    const res = fetch(url)
-    if (!res.ok) {
-      throw new Error(`Res: ${res.status}`);
-    }
-    const json = response.json();
+    fetch(url).then(res => {
+      if (!res.ok) {
+        throw new Error(`Res: ${res.status}`);
+      }
 
-    document.getElementById("data").innerHTML = json
-  } catch (e) {
-    console.error(e)
-  }
+      return response.json();
+    }).then(json => {
+      document.getElementById("data").innerHTML = json
+    }).catch(error => {
+      console.error(`Error: ${error}`)
+    })
 </script>
 <div class="container-fluid p-5 bg-primary text-white text-center">
   <h1>My First Bootstrap Page</h1>
