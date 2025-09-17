@@ -1,10 +1,19 @@
-import { createContext, useContext, type ReactNode } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from "react";
 import type { CalendarWindow } from "../models/CalendarWindow";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 type ApiContextType = {
-	getWindows: () => Promise<CalendarWindow[]>;
+	windows: CalendarWindow[] | null;
+	refreshWindows: () => Promise<void>;
+	loading: boolean;
+	error: string | null;
 };
 
 const ApiContext = createContext<ApiContextType | null>(null);
@@ -19,16 +28,36 @@ export const useApiContext = () => {
 };
 
 export const ApiProvider = ({ children }: { children: ReactNode }) => {
+	const [windows, setWindows] = useState<CalendarWindow[] | null>(null);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
+
 	const getWindows = async () => {
-		const res = await fetch(`${BACKEND_URL}/api/windows`);
+		setLoading(true);
 
-		if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+		try {
+			const res = await fetch(`${BACKEND_URL}/api/windows`);
 
-		return res.json();
+			if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+
+			const windows = await res.json();
+			setWindows(windows);
+		} catch (err: any) {
+			setError(err.message ?? "Failed to load windows");
+		} finally {
+			setLoading(false);
+		}
 	};
 
+	useEffect(() => {
+		getWindows();
+	}, []);
+
 	const apiContextValue: ApiContextType = {
-		getWindows,
+		windows,
+		refreshWindows: getWindows,
+		loading,
+		error,
 	};
 
 	return (

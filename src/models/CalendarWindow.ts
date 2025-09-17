@@ -1,65 +1,65 @@
 export type CalendarWindow = {
-	nr: number;
+	day: number;
 	text: string;
-	image: string;
+	imagePath: string;
 	opened: boolean;
 	locked: boolean;
 };
 
 export const rawWindows: CalendarWindow[] = [
 	{
-		nr: 1,
+		day: 1,
 		text: "Hallo",
-		image: "https://cdn2.thecatapi.com/images/5ov.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/5ov.jpg",
 		locked: false,
 		opened: false,
 	},
 	{
-		nr: 2,
+		day: 2,
 		text: "Welt",
-		image: "https://cdn2.thecatapi.com/images/1p2.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/1p2.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 3,
+		day: 3,
 		text: "Wiesch no schnuggi",
-		image: "https://cdn2.thecatapi.com/images/MTQ5NTAyMA.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/MTQ5NTAyMA.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 4,
+		day: 4,
 		text: "Womer denne irgendwo",
-		image: "https://cdn2.thecatapi.com/images/acr.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/acr.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 5,
+		day: 5,
 		text: "zeme si ga gügsle",
-		image: "https://cdn2.thecatapi.com/images/PEgob-hhL.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/PEgob-hhL.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 6,
+		day: 6,
 		text: "und fasch nümm hei chönne",
-		image: "https://cdn2.thecatapi.com/images/-y_6SBPrw.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/-y_6SBPrw.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 7,
+		day: 7,
 		text: "oder dr fäbu dä chli gigu",
-		image: "https://cdn2.thecatapi.com/images/asl.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/asl.jpg",
 		locked: true,
 		opened: false,
 	},
 	{
-		nr: 8,
+		day: 8,
 		text: "Aues um d ohre isch gfloge",
-		image: "https://cdn2.thecatapi.com/images/5ov.jpg",
+		imagePath: "https://cdn2.thecatapi.com/images/5ov.jpg",
 		locked: true,
 		opened: false,
 	},
