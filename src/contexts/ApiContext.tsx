@@ -11,7 +11,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 type ApiContextType = {
 	windows: CalendarWindow[] | null;
+	isAdmin: boolean | null;
 	refreshWindows: () => Promise<void>;
+	refreshIsAdmin: () => Promise<void>;
+	authenticateAdmin: (password: string) => Promise<boolean>;
 	loading: boolean;
 	error: string | null;
 };
@@ -31,6 +34,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const [windows, setWindows] = useState<CalendarWindow[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
+	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
 	const getWindows = async () => {
 		setLoading(true);
@@ -49,13 +53,45 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
+	const getAdmin = async () => {
+		const res = await fetch(`${BACKEND_URL}/api/admin`, {
+			credentials: "include",
+		});
+
+		if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
+
+		const data = await res.json();
+		setIsAdmin(data.admin === true);
+	};
+
+	const authenticateAdmin = async (password: string) => {
+		const res = await fetch(`${BACKEND_URL}/api/admin/login`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ password: password }),
+			credentials: "include",
+		});
+
+		if (res.ok) {
+			await getAdmin();
+			return true;
+		}
+		return false;
+	};
+
 	useEffect(() => {
 		getWindows();
+		getAdmin();
 	}, []);
 
 	const apiContextValue: ApiContextType = {
 		windows,
+		isAdmin,
+		authenticateAdmin: authenticateAdmin,
 		refreshWindows: getWindows,
+		refreshIsAdmin: getAdmin,
 		loading,
 		error,
 	};
