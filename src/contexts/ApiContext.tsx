@@ -1,13 +1,7 @@
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-	type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { CalendarWindow } from "../models/CalendarWindow";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 type ApiContextType = {
 	windows: CalendarWindow[] | null;
@@ -96,9 +90,5 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		error,
 	};
 
-	return (
-		<ApiContext.Provider value={apiContextValue}>
-			{children}
-		</ApiContext.Provider>
-	);
+	return <ApiContext.Provider value={apiContextValue}>{children}</ApiContext.Provider>;
 };
