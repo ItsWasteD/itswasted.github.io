@@ -1,7 +1,8 @@
 export type CalendarWindow = {
-	day: number;
+	id: number;
+	day?: number;
 	text: string;
 	imagePath: string;
-	opened: boolean;
-	locked: boolean;
+	opened: number;
+	locked?: boolean;
 };

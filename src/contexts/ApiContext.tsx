@@ -1,6 +1,13 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+	createContext,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from "react";
 import type { CalendarWindow } from "../models/CalendarWindow";
 import { BACKEND_URL } from "../constants";
+import { fetchWindows } from "../services/WindowService";
 
 type ApiContextType = {
 	windows: CalendarWindow[] | null;
@@ -31,22 +38,12 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
 	const getWindows = async () => {
-		setLoading(true);
-
 		try {
-			const res = await fetch(`${BACKEND_URL}/api/windows`);
-
-			if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-
-			const windows = await res.json();
-			setWindows(windows);
-		} catch (err: unknown) {
-			if (err instanceof Error) {
-				console.log(err.message);
-				setError(err.message);
-			} else {
-				console.log("Unknown error", err);
-			}
+			setLoading(true);
+			const data = await fetchWindows();
+			setWindows(data);
+		} catch (e) {
+			setError(e instanceof Error ? e.message : "Unknown error");
 		} finally {
 			setLoading(false);
 		}
@@ -82,7 +79,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 
 	useEffect(() => {
 		getWindows();
-		getAdmin();
+		//getAdmin();
 	}, []);
 
 	const apiContextValue: ApiContextType = {
@@ -95,5 +92,9 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		error,
 	};
 
-	return <ApiContext.Provider value={apiContextValue}>{children}</ApiContext.Provider>;
+	return (
+		<ApiContext.Provider value={apiContextValue}>
+			{children}
+		</ApiContext.Provider>
+	);
 };
