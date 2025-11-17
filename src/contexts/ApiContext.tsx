@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { CalendarWindow } from "../models/CalendarWindow";
-
-export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+import { BACKEND_URL } from "../constants";
 
 type ApiContextType = {
 	windows: CalendarWindow[] | null;
@@ -15,6 +14,7 @@ type ApiContextType = {
 
 const ApiContext = createContext<ApiContextType | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useApiContext = () => {
 	const context = useContext(ApiContext);
 	if (!context) {
@@ -40,8 +40,13 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 
 			const windows = await res.json();
 			setWindows(windows);
-		} catch (err: any) {
-			setError(err.message ?? "Failed to load windows");
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				console.log(err.message);
+				setError(err.message);
+			} else {
+				console.log("Unknown error", err);
+			}
 		} finally {
 			setLoading(false);
 		}

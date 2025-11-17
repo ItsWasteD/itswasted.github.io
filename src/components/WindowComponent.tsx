@@ -1,5 +1,6 @@
 import { Navigate, useParams } from "react-router-dom";
-import { useApiContext } from "./contexts/ApiContext";
+import { useApiContext } from "../contexts/ApiContext";
+import { BACKEND_URL } from "../constants";
 
 export default function WindowComponent() {
 	const { windows } = useApiContext();
@@ -10,7 +11,7 @@ export default function WindowComponent() {
 		return <Navigate to="/" replace />;
 	}
 
-	const window = windows?.find((w) => w.day == Number(day));
+	const window = windows?.find((w) => w.day == dayNumber);
 
 	if (!window) return <p>Window not found</p>;
 	if (window.locked) return <p>This window is still locked 🎁</p>;
@@ -22,7 +23,7 @@ export default function WindowComponent() {
 				className="mx-auto"
 				src={
 					window.imagePath != "nopath"
-						? window.imagePath
+						? `${BACKEND_URL + "/images/" + window.imagePath}`
 						: "https://picsum.photos/400"
 				}
 			/>

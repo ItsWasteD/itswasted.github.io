@@ -1,62 +1,9 @@
-import { useEffect, useRef, useState } from "react";
 import { useApiContext } from "../contexts/ApiContext";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
-	const {
-		windows,
-		refreshWindows,
-		refreshIsAdmin,
-		isAdmin,
-		authenticateAdmin,
-	} = useApiContext();
-
-	const [checking, setChecking] = useState(true);
-	const prompted = useRef(false);
-
-	const handleLogin = async () => {
-		const password = prompt("Password:");
-		if (!password) return false;
-
-		const success = await authenticateAdmin(password);
-		if (!success) {
-			alert("Wrong password");
-			return false;
-		}
-		return true;
-	};
-
-	useEffect(() => {
-		const run = async () => {
-			// first, check backend session
-			await refreshIsAdmin();
-
-			if (!prompted.current && isAdmin === false) {
-				prompted.current = true;
-				const password = prompt("Password:");
-				if (password) {
-					const success = await authenticateAdmin(password);
-					if (!success) {
-						alert("Wrong password");
-					}
-				}
-			}
-
-			// refresh windows once admin is confirmed
-			await refreshWindows();
-			setChecking(false);
-		};
-
-		run();
-	}, [isAdmin, refreshWindows, refreshIsAdmin, authenticateAdmin]);
-
-	if (checking || isAdmin === null) {
-		return <div>Checking authentication...</div>;
-	}
-
-	if (!isAdmin) {
-		return <Navigate to="/" replace />;
-	}
+	const { windows, isAdmin } = useApiContext();
+	const navigate = useNavigate();
 
 	return (
 		<div className="min-h-full">
@@ -73,24 +20,12 @@ export default function AdminPanel() {
 						<table className="min-w-full divide-y-2 divide-gray-200 dark:divide-gray-700">
 							<thead className="sticky top-0 bg-white ltr:text-left rtl:text-right dark:bg-gray-900">
 								<tr className="*:font-medium *:text-gray-900 dark:*:text-white">
-									<th className="px-3 py-2 whitespace-nowrap">
-										Day
-									</th>
-									<th className="px-3 py-2 whitespace-nowrap">
-										Text
-									</th>
-									<th className="px-3 py-2 whitespace-nowrap">
-										ImagePath
-									</th>
-									<th className="px-3 py-2 whitespace-nowrap">
-										Locked
-									</th>
-									<th className="px-3 py-2 whitespace-nowrap">
-										Opened
-									</th>
-									<th className="px-3 py-2 whitespace-nowrap">
-										Actions
-									</th>
+									<th className="px-3 py-2 whitespace-nowrap">Day</th>
+									<th className="px-3 py-2 whitespace-nowrap">Text</th>
+									<th className="px-3 py-2 whitespace-nowrap">ImagePath</th>
+									<th className="px-3 py-2 whitespace-nowrap">Locked</th>
+									<th className="px-3 py-2 whitespace-nowrap">Opened</th>
+									<th className="px-3 py-2 whitespace-nowrap">Actions</th>
 								</tr>
 							</thead>
 
@@ -101,33 +36,21 @@ export default function AdminPanel() {
 											key={window.day}
 											className="*:text-gray-900 *:first:font-medium dark:*:text-white"
 										>
+											<td className="px-3 py-2 whitespace-nowrap">{window.day}</td>
+											<td className="px-3 py-2 whitespace-nowrap">{window.text}</td>
+											<td className="px-3 py-2 whitespace-nowrap">{window.imagePath}</td>
 											<td className="px-3 py-2 whitespace-nowrap">
-												{window.day}
+												{window.locked ? "true" : "false"}
 											</td>
 											<td className="px-3 py-2 whitespace-nowrap">
-												{window.text}
+												{window.opened ? "true" : "false"}
 											</td>
 											<td className="px-3 py-2 whitespace-nowrap">
-												{window.imagePath}
-											</td>
-											<td className="px-3 py-2 whitespace-nowrap">
-												{window.locked
-													? "true"
-													: "false"}
-											</td>
-											<td className="px-3 py-2 whitespace-nowrap">
-												{window.opened
-													? "true"
-													: "false"}
-											</td>
-											<td className="px-3 py-2 whitespace-nowrap">
-												<div
-													className="inline-flex rounded-md shadow-xs"
-													role="group"
-												>
+												<div className="inline-flex rounded-md shadow-xs" role="group">
 													<button
 														type="button"
 														className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white"
+														onClick={() => navigate(`edit/${window.day}`)}
 													>
 														<svg
 															xmlns="http://www.w3.org/2000/svg"
