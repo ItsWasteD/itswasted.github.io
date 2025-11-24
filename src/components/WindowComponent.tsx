@@ -1,6 +1,7 @@
 import { Navigate, useParams } from "react-router-dom";
 import { useApiContext } from "../contexts/ApiContext";
-import { BACKEND_URL } from "../constants";
+import { BACKEND_URL, LOCKED_STRINGS } from "../constants";
+import { getRandomString } from "../util/generator";
 
 export default function WindowComponent() {
 	const { windows } = useApiContext();
@@ -14,7 +15,12 @@ export default function WindowComponent() {
 	const window = windows?.find((w) => w.day == dayNumber);
 
 	if (!window) return <p>Window not found</p>;
-	if (window.locked) return <p>This window is still locked 🎁</p>;
+	if (window.locked)
+		return (
+			<h3 className="text-center text-2xl">
+				{getRandomString(LOCKED_STRINGS)} 🎁
+			</h3>
+		);
 
 	return (
 		<div className="w-1/2 m-auto text-center">
