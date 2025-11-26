@@ -1,7 +1,7 @@
-import { BACKEND_URL } from "../constants";
-import type { CalendarWindow } from "../models/CalendarWindow";
+import { BACKEND_URL } from "../../constants";
+import type { ImageWindow } from "../../models/CalendarWindow";
 
-export default function WindowCard({ data }: { data: CalendarWindow }) {
+export default function ImageWindowCard({ data }: { data: ImageWindow }) {
 	return (
 		<div
 			style={{
@@ -16,7 +16,7 @@ export default function WindowCard({ data }: { data: CalendarWindow }) {
 			<div
 				className={`absolute inset-0 bg-black/40 flex items-center justify-center text-white text-center text-wrap font-bold`}
 			>
-				{data.day + ": " + data.text}
+				{data.day + ": " + data.content.text}
 			</div>
 		</div>
 	);

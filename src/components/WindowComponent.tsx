@@ -28,8 +28,8 @@ export default function WindowComponent() {
 			<img
 				className="mx-auto"
 				src={
-					window.imagePath != "nopath"
-						? `${BACKEND_URL + "/images/" + window.imagePath}`
+					window.thumbnailPath != "nopath"
+						? `${BACKEND_URL + "/images/" + window.thumbnailPath}`
 						: "https://picsum.photos/400"
 				}
 			/>
