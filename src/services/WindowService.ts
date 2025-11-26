@@ -9,7 +9,9 @@ export async function fetchWindows(): Promise<CalendarWindowType[]> {
 	return await res.json();
 }
 
-export async function updateWindowById(window: CalendarWindowType): Promise<boolean> {
+export async function updateWindowById(
+	window: CalendarWindowType
+): Promise<boolean> {
 	fetch(`${BACKEND_URL}/api/windows/${window.id}`, {
 		method: "PATCH",
 		headers: {

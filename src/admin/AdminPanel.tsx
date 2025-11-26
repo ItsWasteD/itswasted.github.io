@@ -60,7 +60,7 @@ export default function AdminPanel() {
 												{window.text}
 											</td>
 											<td className="px-3 py-2 whitespace-nowrap">
-												{window.imagePath}
+												{window.thumbnailPath}
 											</td>
 											<td className="px-3 py-2 whitespace-nowrap">
 												{window.locked

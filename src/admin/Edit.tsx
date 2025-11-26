@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useApiContext } from "../contexts/ApiContext";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateWindowById } from "../services/WindowService";
+import { WINDOW_TYPES } from "../models/CalendarWindow";
 
 export default function Edit() {
 	const { windows, refreshWindows } = useApiContext();
@@ -11,15 +12,18 @@ export default function Edit() {
 	const window = windows?.find((w) => w.day == dayNumber);
 
 	const [text, setText] = useState(window?.text ?? "");
-	const [imagePath, setImagePath] = useState(window?.imagePath ?? "");
+	const [thumbnailPath, setThumbnailPath] = useState(
+		window?.thumbnailPath ?? ""
+	);
 	const [opened, setOpened] = useState(window?.opened ?? 0);
+	const [type, setType] = useState(window?.type);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		if (window) {
 			setText(window.text);
-			setImagePath(window.imagePath);
+			setThumbnailPath(window.thumbnailPath);
 			setOpened(window.opened);
 		}
 	}, [window]);
@@ -32,8 +36,9 @@ export default function Edit() {
 			const success = await updateWindowById({
 				id: window!.id,
 				text: text,
-				imagePath: imagePath,
+				thumbnailPath: thumbnailPath,
 				opened: opened,
+				type: type,
 			});
 			if (success) await refreshWindows();
 		} catch (e) {
@@ -69,11 +74,11 @@ export default function Edit() {
 				Image Path
 			</label>
 			<input
-				id="imagePath"
+				id="thumbnailPath"
 				type="text"
-				name="imagePath"
-				value={imagePath}
-				onChange={(e) => setImagePath(e.target.value)}
+				name="thumbnailPath"
+				value={thumbnailPath}
+				onChange={(e) => setThumbnailPath(e.target.value)}
 				className="block min-w-0 grow bg-gray-800 py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
 			/>
 			<label
@@ -89,6 +94,18 @@ export default function Edit() {
 				onChange={(e) => setOpened(e.target.checked ? 1 : 0)}
 				name="opened"
 			/>
+			<label
+				id="opened"
+				htmlFor="opened"
+				className="block text-sm/6 font-medium text-white"
+			>
+				Type
+			</label>
+			<select name="type" onChange={() => console.log("changed")}>
+				{WINDOW_TYPES.map((t) => (
+					<option value={t}>{t}</option>
+				))}
+			</select>
 			<br />
 			{error && <div className="text-red-500">{error}</div>}
 			<button
