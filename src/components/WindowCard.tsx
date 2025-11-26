@@ -1,13 +1,11 @@
 import { BACKEND_URL } from "../constants";
-import type { CalendarWindow } from "../models/CalendarWindow";
+import type { CalendarWindowType } from "../models/CalendarWindow";
 
-export default function WindowCard({ data }: { data: CalendarWindow }) {
+export default function WindowCard({ data }: { data: CalendarWindowType }) {
 	return (
 		<div
 			style={{
-				backgroundImage: `url(${
-					BACKEND_URL + "/images/" + data.content.imagePath
-				})`,
+				backgroundImage: `url(${BACKEND_URL + "/images/" + data.thumbnailPath})`,
 			}}
 			className={`${
 				data.locked ? "blur-sm" : ""

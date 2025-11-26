@@ -1,23 +1,19 @@
 import { BACKEND_URL } from "../../constants";
-import type { ImageWindow } from "../../models/CalendarWindow";
+import type { ImageWindowType } from "../../models/CalendarWindow";
 
-export default function ImageWindowCard({ data }: { data: ImageWindow }) {
+export default function ImageWindow({ data }: { data: ImageWindowType }) {
 	return (
-		<div
-			style={{
-				backgroundImage: `url(${
-					BACKEND_URL + "/images/" + data.content.imagePath
-				})`,
-			}}
-			className={`${
-				data.locked ? "blur-sm" : ""
-			} aspect-square bg-contain bg-center rounded-lg shadow-md relative`}
-		>
-			<div
-				className={`absolute inset-0 bg-black/40 flex items-center justify-center text-white text-center text-wrap font-bold`}
-			>
-				{data.day + ": " + data.content.text}
-			</div>
+		<div className="w-1/2 m-auto text-center">
+			<h1>{data.day}</h1>
+			<img
+				className="mx-auto"
+				src={
+					data.thumbnailPath != "nopath"
+						? `${BACKEND_URL + "/images/" + data.thumbnailPath}`
+						: "https://picsum.photos/400"
+				}
+			/>
+			<p>{data.text}</p>
 		</div>
 	);
 }

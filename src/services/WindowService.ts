@@ -1,7 +1,7 @@
 import { BACKEND_URL } from "../constants";
-import type { CalendarWindow } from "../models/CalendarWindow";
+import type { CalendarWindowType } from "../models/CalendarWindow";
 
-export async function fetchWindows(): Promise<CalendarWindow[]> {
+export async function fetchWindows(): Promise<CalendarWindowType[]> {
 	const res = await fetch(`${BACKEND_URL}/api/windows`);
 
 	if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
@@ -9,9 +9,7 @@ export async function fetchWindows(): Promise<CalendarWindow[]> {
 	return await res.json();
 }
 
-export async function updateWindowById(
-	window: CalendarWindow
-): Promise<boolean> {
+export async function updateWindowById(window: CalendarWindowType): Promise<boolean> {
 	fetch(`${BACKEND_URL}/api/windows/${window.id}`, {
 		method: "PATCH",
 		headers: {

@@ -1,16 +1,10 @@
-import {
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-	type ReactNode,
-} from "react";
-import type { CalendarWindow } from "../models/CalendarWindow";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { CalendarWindowType } from "../models/CalendarWindow";
 import { BACKEND_URL } from "../constants";
 import { fetchWindows } from "../services/WindowService";
 
 type ApiContextType = {
-	windows: CalendarWindow[] | null;
+	windows: CalendarWindowType[] | null;
 	isAdmin: boolean | null;
 	refreshWindows: () => Promise<void>;
 	refreshIsAdmin: () => Promise<void>;
@@ -32,7 +26,7 @@ export const useApiContext = () => {
 };
 
 export const ApiProvider = ({ children }: { children: ReactNode }) => {
-	const [windows, setWindows] = useState<CalendarWindow[] | null>(null);
+	const [windows, setWindows] = useState<CalendarWindowType[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
@@ -92,9 +86,5 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		error,
 	};
 
-	return (
-		<ApiContext.Provider value={apiContextValue}>
-			{children}
-		</ApiContext.Provider>
-	);
+	return <ApiContext.Provider value={apiContextValue}>{children}</ApiContext.Provider>;
 };

@@ -1,9 +1,9 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Calendar from "./components/Calendar";
 import { useApiContext } from "./contexts/ApiContext";
-import WindowComponent from "./components/WindowComponent";
 import AdminPanel from "./admin/AdminPanel";
 import Edit from "./admin/Edit";
+import WindowRenderer from "./components/WindowRenderer";
 
 function App() {
 	const { windows } = useApiContext();
@@ -13,7 +13,7 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route index element={<Calendar windows={windows} />} />
-					<Route path="/window/:day" element={<WindowComponent />} />
+					<Route path="/window/:day" element={<WindowRenderer />} />
 					<Route path="/admin">
 						<Route index element={<AdminPanel />} />
 						<Route path="edit/:day" element={<Edit />} />
