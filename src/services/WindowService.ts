@@ -12,7 +12,7 @@ export async function fetchWindows(): Promise<CalendarWindowType[]> {
 export async function updateWindowById(
 	window: CalendarWindowType
 ): Promise<boolean> {
-	fetch(`${BACKEND_URL}/api/windows/${window.id}`, {
+	const res = await fetch(`${BACKEND_URL}/api/windows/${window.id}`, {
 		method: "PATCH",
 		headers: {
 			"Content-Type": "application/json",
@@ -21,23 +21,19 @@ export async function updateWindowById(
 			...window,
 			opened: window.opened ? true : false,
 		}),
-	})
-		.then(async (res) => {
-			if (res.status === 204) {
-				console.log("Window updated successfully!");
-				return true;
-			} else if (res.status === 404) {
-				console.error("Window not found");
-			} else if (res.status === 409) {
-				console.error("ID mismatch");
-			} else {
-				const errorData = await res.json();
-				console.error("Error:", errorData);
-			}
-		})
-		.catch((err) => {
-			console.error("Network error:", err);
-		});
+	});
+
+	if (res.status === 204) {
+		console.log("Window updated successfully!");
+		return true;
+	} else if (res.status === 404) {
+		console.error("Window not found");
+	} else if (res.status === 409) {
+		console.error("ID mismatch");
+	} else {
+		const errorData = await res.text();
+		throw new Error(errorData);
+	}
 
 	return false;
 }
