@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { CalendarWindowType } from "../models/CalendarWindow";
 import { BACKEND_URL } from "../constants";
 import { fetchWindows } from "../services/WindowService";
@@ -6,6 +6,7 @@ import { fetchWindows } from "../services/WindowService";
 type ApiContextType = {
 	windows: CalendarWindowType[] | null;
 	isAdmin: boolean | null;
+	authenticate: (uuid: string) => Promise<boolean>;
 	refreshWindows: () => Promise<void>;
 	refreshIsAdmin: () => Promise<void>;
 	authenticateAdmin: (password: string) => Promise<boolean>;
@@ -54,6 +55,19 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		setIsAdmin(data.admin === true);
 	};
 
+	const authenticate = useCallback(async (uuid: string) => {
+		const res = await fetch(`${BACKEND_URL}/api/authenticate`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ uuid: uuid }),
+			credentials: "include",
+		});
+
+		return res.ok;
+	}, []);
+
 	const authenticateAdmin = async (password: string) => {
 		const res = await fetch(`${BACKEND_URL}/api/admin/login`, {
 			method: "POST",
@@ -79,6 +93,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const apiContextValue: ApiContextType = {
 		windows,
 		isAdmin,
+		authenticate: authenticate,
 		authenticateAdmin: authenticateAdmin,
 		refreshWindows: getWindows,
 		refreshIsAdmin: getAdmin,

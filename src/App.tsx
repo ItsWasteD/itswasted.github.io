@@ -4,9 +4,39 @@ import { useApiContext } from "./contexts/ApiContext";
 import AdminPanel from "./admin/AdminPanel";
 import Edit from "./admin/Edit";
 import WindowRenderer from "./components/WindowRenderer";
+import { useEffect, useState } from "react";
 
 function App() {
-	const { windows } = useApiContext();
+	const { windows, authenticate } = useApiContext();
+	const [loading, setLoading] = useState(true);
+	const [authenticated, setAuthenticated] = useState(false);
+
+	useEffect(() => {
+		const hash = window.location.hash.replace("#", "");
+
+		if (!hash) {
+			setLoading(false);
+			setAuthenticated(false);
+			return;
+		}
+
+		async function checkAuth() {
+			try {
+				const isValid = await authenticate(hash);
+				setAuthenticated(isValid);
+			} catch (e) {
+				console.error("Authentication failed", e);
+				setAuthenticated(false);
+			} finally {
+				setLoading(false);
+			}
+		}
+
+		checkAuth();
+	}, [authenticate]);
+
+	if (loading) return <div>Am lade...</div>;
+	if (!authenticated) return <div>Nüt für dini ouge ;)</div>;
 
 	return (
 		<>
