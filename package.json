@@ -3,7 +3,7 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
-	"homepage": "https://itswasted.github.io/itswasted.github.io/",
+	"homepage": "https://itswasted.github.io/",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
