@@ -5,10 +5,9 @@ import { fetchWindows } from "../services/WindowService";
 
 type ApiContextType = {
 	windows: CalendarWindowType[] | null;
-	isAdmin: boolean | null;
-	authenticate: (uuid: string) => Promise<boolean>;
 	refreshWindows: () => Promise<void>;
-	refreshIsAdmin: () => Promise<void>;
+	isAuthenticated: boolean;
+	authenticate: (uuid: string) => Promise<boolean>;
 	authenticateAdmin: (password: string) => Promise<boolean>;
 	loading: boolean;
 	error: string | null;
@@ -30,7 +29,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const [windows, setWindows] = useState<CalendarWindowType[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-	const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+	const [isAuthenticated, setAuthenticated] = useState(false);
 
 	const getWindows = async () => {
 		try {
@@ -44,17 +43,6 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		}
 	};
 
-	const getAdmin = async () => {
-		const res = await fetch(`${BACKEND_URL}/api/admin`, {
-			credentials: "include",
-		});
-
-		if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
-
-		const data = await res.json();
-		setIsAdmin(data.admin === true);
-	};
-
 	const authenticate = useCallback(async (uuid: string) => {
 		const res = await fetch(`${BACKEND_URL}/api/authenticate`, {
 			method: "POST",
@@ -65,6 +53,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 			credentials: "include",
 		});
 
+		setAuthenticated(res.ok);
 		return res.ok;
 	}, []);
 
@@ -79,24 +68,24 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		});
 
 		if (res.ok) {
-			await getAdmin();
+			// TODO
 			return true;
 		}
 		return false;
 	};
 
 	useEffect(() => {
-		getWindows();
-		//getAdmin();
-	}, []);
+		if (isAuthenticated) {
+			getWindows();
+		}
+	}, [isAuthenticated]);
 
 	const apiContextValue: ApiContextType = {
 		windows,
-		isAdmin,
+		refreshWindows: getWindows,
+		isAuthenticated,
 		authenticate: authenticate,
 		authenticateAdmin: authenticateAdmin,
-		refreshWindows: getWindows,
-		refreshIsAdmin: getAdmin,
 		loading,
 		error,
 	};

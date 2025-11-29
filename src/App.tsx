@@ -7,26 +7,22 @@ import WindowRenderer from "./components/WindowRenderer";
 import { useEffect, useState } from "react";
 
 function App() {
-	const { windows, authenticate } = useApiContext();
+	const { windows, authenticate, isAuthenticated } = useApiContext();
 	const [loading, setLoading] = useState(true);
-	const [authenticated, setAuthenticated] = useState(false);
 
 	useEffect(() => {
 		const hash = window.location.hash.replace("#", "");
 
 		if (!hash) {
 			setLoading(false);
-			setAuthenticated(false);
 			return;
 		}
 
 		async function checkAuth() {
 			try {
-				const isValid = await authenticate(hash);
-				setAuthenticated(isValid);
+				await authenticate(hash);
 			} catch (e) {
 				console.error("Authentication failed", e);
-				setAuthenticated(false);
 			} finally {
 				setLoading(false);
 			}
@@ -36,7 +32,7 @@ function App() {
 	}, [authenticate]);
 
 	if (loading) return <div>Am lade...</div>;
-	if (!authenticated) return <div>Nüt für dini ouge ;)</div>;
+	if (!isAuthenticated) return <div>Nüt für dini ouge ;)</div>;
 
 	return (
 		<>
