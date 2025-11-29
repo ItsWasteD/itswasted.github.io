@@ -31,8 +31,19 @@ function App() {
 		checkAuth();
 	}, [authenticate]);
 
-	if (loading) return <div>Am lade...</div>;
-	if (!isAuthenticated) return <div>Nüt für dini ouge ;)</div>;
+	if (loading)
+		return (
+			<div className="flex items-center justify-center h-screen">
+				<h1 className="text-5xl font-bold">Am lade...</h1>
+			</div>
+		);
+
+	if (!isAuthenticated)
+		return (
+			<div className="flex items-center justify-center h-screen">
+				<h1 className="text-5xl font-bold">Nüt für dini ouge :)</h1>
+			</div>
+		);
 
 	return (
 		<>

@@ -31,7 +31,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const [error, setError] = useState<string | null>(null);
 	const [isAuthenticated, setAuthenticated] = useState(false);
 
-	const getWindows = async () => {
+	const getWindows = useCallback(async () => {
 		try {
 			setLoading(true);
 			const data = await fetchWindows();
@@ -41,7 +41,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		} finally {
 			setLoading(false);
 		}
-	};
+	}, []);
 
 	const authenticate = useCallback(async (uuid: string) => {
 		const res = await fetch(`${BACKEND_URL}/api/authenticate`, {
@@ -78,7 +78,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		if (isAuthenticated) {
 			getWindows();
 		}
-	}, [isAuthenticated]);
+	}, [isAuthenticated, getWindows]);
 
 	const apiContextValue: ApiContextType = {
 		windows,
