@@ -13,11 +13,9 @@ export default function Edit() {
 	const window = windows?.find((w) => w.day == dayNumber);
 
 	const [text, setText] = useState(window?.text ?? "");
-	const [thumbnailPath, setThumbnailPath] = useState(
-		window?.thumbnailPath ?? ""
-	);
+	const [thumbnailPath, setThumbnailPath] = useState(window?.thumbnailPath ?? "");
 	const [opened, setOpened] = useState(window?.opened ?? 0);
-	const [type, setType] = useState(window?.type);
+	const [type, setType] = useState<WindowType>(window?.type || "text");
 	const [content, setContent] = useState(JSON.stringify(window?.content));
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -27,6 +25,8 @@ export default function Edit() {
 			setText(window.text);
 			setThumbnailPath(window.thumbnailPath);
 			setOpened(window.opened);
+			setType(window.type);
+			setContent(JSON.stringify(window.content));
 		}
 	}, [window]);
 
@@ -35,6 +35,7 @@ export default function Edit() {
 		setError(null);
 
 		try {
+			console.log(type);
 			const success = await updateWindowById({
 				id: window!.id,
 				text: text,
@@ -56,18 +57,12 @@ export default function Edit() {
 
 	return (
 		<>
-			<button
-				className="bg-blue-500 py-2 px-4"
-				onClick={() => navigate("/admin")}
-			>
+			<button className="bg-blue-500 py-2 px-4" onClick={() => navigate("/admin")}>
 				Back
 			</button>
 			<div className="mx-auto w-1/3 flex flex-col items-center">
 				<h1 className="text-center text-3xl">Day: {dayNumber}</h1>
-				<label
-					htmlFor="text"
-					className="block text-sm/6 font-medium text-white"
-				>
+				<label htmlFor="text" className="block text-sm/6 font-medium text-white">
 					Text
 				</label>
 				<input
@@ -78,10 +73,7 @@ export default function Edit() {
 					onChange={(e) => setText(e.target.value)}
 					className="block min-w-0 grow bg-gray-800 py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
 				/>
-				<label
-					htmlFor="imagePath"
-					className="block text-sm/6 font-medium text-white"
-				>
+				<label htmlFor="imagePath" className="block text-sm/6 font-medium text-white">
 					Thumbnail Path
 				</label>
 				<input
@@ -92,10 +84,7 @@ export default function Edit() {
 					onChange={(e) => setThumbnailPath(e.target.value)}
 					className="block min-w-0 grow bg-gray-800 py-1.5 pr-3 pl-1 text-base text-white placeholder:text-gray-500 focus:outline-none sm:text-sm/6"
 				/>
-				<label
-					htmlFor="opened"
-					className="block text-sm/6 font-medium text-white"
-				>
+				<label htmlFor="opened" className="block text-sm/6 font-medium text-white">
 					Opened
 				</label>
 				<input
@@ -105,16 +94,14 @@ export default function Edit() {
 					onChange={(e) => setOpened(e.target.checked ? 1 : 0)}
 					name="opened"
 				/>
-				<label
-					htmlFor="type"
-					className="block text-sm/6 font-medium text-white"
-				>
+				<label htmlFor="type" className="block text-sm/6 font-medium text-white">
 					Type
 				</label>
 				<select
 					id="type"
 					className="bg-black"
 					name="type"
+					value={type}
 					onChange={(e) => setType(e.target.value as WindowType)}
 				>
 					{WINDOW_TYPES.map((t) => (
@@ -123,19 +110,10 @@ export default function Edit() {
 						</option>
 					))}
 				</select>
-				<label
-					htmlFor="content"
-					className="block text-sm/6 font-medium text-white"
-				>
+				<label htmlFor="content" className="block text-sm/6 font-medium text-white">
 					Content
 				</label>
-				<textarea
-					id="content"
-					name="content"
-					onChange={(e) => setContent(e.target.value)}
-				>
-					{content}
-				</textarea>
+				<textarea id="content" name="content" value={content} onChange={(e) => setContent(e.target.value)} />
 				<br />
 				{error && (
 					<>

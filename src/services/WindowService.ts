@@ -9,7 +9,25 @@ export async function fetchWindows(): Promise<CalendarWindowType[]> {
 
 	if (!res.ok) throw new Error(`HTTP Error: ${res.status}`);
 
-	return await res.json();
+	const data: (Omit<CalendarWindowType, "content"> & { content: string | null })[] = await res.json();
+
+	return data.map((item) => {
+		let content: CalendarWindowType["content"] | undefined;
+
+		// Only parse if it's a string
+		if (item.content) {
+			try {
+				content = JSON.parse(item.content) as CalendarWindowType["content"];
+			} catch {
+				content = undefined; // fallback if JSON is invalid
+			}
+		}
+
+		return {
+			...item,
+			content,
+		} as CalendarWindowType;
+	});
 }
 
 export async function updateWindowById(window: CalendarWindowType): Promise<boolean> {
@@ -20,6 +38,7 @@ export async function updateWindowById(window: CalendarWindowType): Promise<bool
 		},
 		body: JSON.stringify({
 			...window,
+			content: JSON.stringify(window.content),
 			opened: window.opened ? true : false,
 		}),
 		credentials: "include",
