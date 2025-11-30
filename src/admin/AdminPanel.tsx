@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useApiContext } from "../contexts/ApiContext";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
 	const { windows, checkAdmin } = useApiContext();
