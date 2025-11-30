@@ -1,4 +1,11 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+	createContext,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+	type ReactNode,
+} from "react";
 import type { CalendarWindowType } from "../models/CalendarWindow";
 import { BACKEND_URL } from "../constants";
 import { fetchWindows } from "../services/WindowService";
@@ -8,7 +15,9 @@ type ApiContextType = {
 	refreshWindows: () => Promise<void>;
 	isAuthenticated: boolean;
 	authenticate: (uuid: string) => Promise<boolean>;
+	isAdmin: boolean;
 	authenticateAdmin: (password: string) => Promise<boolean>;
+	checkAdmin: () => Promise<boolean>;
 	loading: boolean;
 	error: string | null;
 };
@@ -29,7 +38,10 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 	const [windows, setWindows] = useState<CalendarWindowType[] | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
-	const [isAuthenticated, setAuthenticated] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(
+		import.meta.env.MODE !== "production"
+	);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const getWindows = useCallback(async () => {
 		try {
@@ -53,26 +65,30 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 			credentials: "include",
 		});
 
-		setAuthenticated(res.ok);
+		setIsAuthenticated(res.ok);
 		return res.ok;
 	}, []);
 
-	const authenticateAdmin = async (password: string) => {
+	const authenticateAdmin = useCallback(async (password: string) => {
 		const res = await fetch(`${BACKEND_URL}/api/admin/login`, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ password: password }),
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ password }),
 			credentials: "include",
 		});
 
-		if (res.ok) {
-			// TODO
-			return true;
-		}
-		return false;
-	};
+		setIsAdmin(res.ok);
+		return res.ok;
+	}, []);
+
+	const checkAdmin = useCallback(async () => {
+		const res = await fetch(`${BACKEND_URL}/api/admin/check`, {
+			method: "GET",
+			credentials: "include",
+		});
+
+		return res.ok;
+	}, []);
 
 	useEffect(() => {
 		if (isAuthenticated) {
@@ -85,10 +101,16 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		refreshWindows: getWindows,
 		isAuthenticated,
 		authenticate: authenticate,
+		isAdmin,
 		authenticateAdmin: authenticateAdmin,
+		checkAdmin: checkAdmin,
 		loading,
 		error,
 	};
 
-	return <ApiContext.Provider value={apiContextValue}>{children}</ApiContext.Provider>;
+	return (
+		<ApiContext.Provider value={apiContextValue}>
+			{children}
+		</ApiContext.Provider>
+	);
 };

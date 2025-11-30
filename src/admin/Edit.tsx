@@ -43,6 +43,7 @@ export default function Edit() {
 				type: type,
 				content: JSON.parse(content),
 			});
+
 			if (success) await refreshWindows();
 		} catch (e) {
 			setError(e instanceof Error ? e.message : "Unknown error");
@@ -81,7 +82,7 @@ export default function Edit() {
 					htmlFor="imagePath"
 					className="block text-sm/6 font-medium text-white"
 				>
-					Image Path
+					Thumbnail Path
 				</label>
 				<input
 					id="thumbnailPath"

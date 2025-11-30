@@ -5,6 +5,7 @@ import AdminPanel from "./admin/AdminPanel";
 import Edit from "./admin/Edit";
 import WindowRenderer from "./components/WindowRenderer";
 import { useEffect, useState } from "react";
+import AdminLogin from "./admin/AdminLogin";
 
 function App() {
 	const { windows, authenticate, isAuthenticated } = useApiContext();
@@ -53,6 +54,7 @@ function App() {
 					<Route path="/window/:day" element={<WindowRenderer />} />
 					<Route path="/admin">
 						<Route index element={<AdminPanel />} />
+						<Route path="login" element={<AdminLogin />} />
 						<Route path="edit/:day" element={<Edit />} />
 					</Route>
 					<Route path="*" element={<Navigate to="/" replace />} />
