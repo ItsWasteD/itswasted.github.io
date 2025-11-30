@@ -12,7 +12,6 @@ export default function AdminLogin() {
 		e.preventDefault();
 
 		const isAdmin = await authenticateAdmin(password);
-		console.log(isAdmin);
 
 		if (!isAdmin) {
 			setError("Wrong password");
@@ -23,10 +22,7 @@ export default function AdminLogin() {
 	}
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			className="mx-auto flex flex-col max-w-md h-100 justify-center"
-		>
+		<form onSubmit={handleSubmit} className="mx-auto flex flex-col max-w-md h-100 justify-center">
 			<input
 				type="password"
 				placeholder="password"

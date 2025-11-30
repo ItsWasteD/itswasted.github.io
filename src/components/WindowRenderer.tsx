@@ -19,7 +19,6 @@ export default function WindowRenderer() {
 	if (!window) return <p>Window not found</p>;
 	if (window.locked) return <h3 className="text-center text-2xl">{getRandomString(LOCKED_STRINGS)} 🎁</h3>;
 
-	console.log(window);
 	switch (window.type) {
 		case "text":
 			return <TextWindow data={window} />;

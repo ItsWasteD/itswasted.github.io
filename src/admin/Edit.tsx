@@ -35,7 +35,6 @@ export default function Edit() {
 		setError(null);
 
 		try {
-			console.log(type);
 			const success = await updateWindowById({
 				id: window!.id,
 				text: text,
