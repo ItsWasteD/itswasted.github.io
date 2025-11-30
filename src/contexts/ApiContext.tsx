@@ -8,6 +8,7 @@ type ApiContextType = {
 	refreshWindows: () => Promise<void>;
 	isAuthenticated: boolean;
 	authenticate: (uuid: string) => Promise<boolean>;
+	checkAuthenticated: () => Promise<boolean>;
 	isAdmin: boolean;
 	authenticateAdmin: (password: string) => Promise<boolean>;
 	checkAdmin: () => Promise<boolean>;
@@ -60,6 +61,26 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		return res.ok;
 	}, []);
 
+	const checkAuthenticated = useCallback(async () => {
+		try {
+			const res = await fetch(`${BACKEND_URL}/api/authenticate/check`, {
+				method: "GET",
+				credentials: "include",
+			});
+
+			if (res.ok) {
+				setIsAuthenticated(true);
+				return true;
+			} else {
+				setIsAuthenticated(false);
+				return false;
+			}
+		} catch {
+			setIsAuthenticated(false);
+			return false;
+		}
+	}, []);
+
 	const authenticateAdmin = useCallback(async (password: string) => {
 		const res = await fetch(`${BACKEND_URL}/api/admin/login`, {
 			method: "POST",
@@ -92,6 +113,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 		refreshWindows: getWindows,
 		isAuthenticated,
 		authenticate: authenticate,
+		checkAuthenticated: checkAuthenticated,
 		isAdmin,
 		authenticateAdmin: authenticateAdmin,
 		checkAdmin: checkAdmin,

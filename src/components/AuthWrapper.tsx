@@ -2,33 +2,31 @@ import { useSearchParams } from "react-router-dom";
 import { useApiContext } from "../contexts/ApiContext";
 import { useEffect, useState } from "react";
 
-export default function AuthWrapper({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function AuthWrapper({ children }: { children: React.ReactNode }) {
 	const [searchParams, _] = useSearchParams();
 	const token = searchParams.get("token") || "";
 
-	const { authenticate, isAuthenticated } = useApiContext();
+	const { authenticate, checkAuthenticated, isAuthenticated } = useApiContext();
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		if (!token) {
-			setLoading(false);
-			return;
-		}
-
 		(async () => {
 			try {
-				await authenticate(token);
+				if (await checkAuthenticated()) {
+					setLoading(false);
+					return;
+				}
+
+				if (token) {
+					await authenticate(token);
+				}
 			} catch (e) {
 				console.error("Authentication failed", e);
 			} finally {
 				setLoading(false);
 			}
 		})();
-	}, [authenticate, token]);
+	}, [authenticate, checkAuthenticated, token]);
 
 	if (loading)
 		return (
