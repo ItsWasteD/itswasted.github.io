@@ -6,6 +6,7 @@ import Edit from "./admin/Edit";
 import WindowRenderer from "./components/WindowRenderer";
 import AdminLogin from "./admin/AdminLogin";
 import AuthWrapper from "./components/AuthWrapper";
+import PdfWindow from "./components/windows/PdfWindow";
 
 function App() {
 	const { windows } = useApiContext();
@@ -16,14 +17,14 @@ function App() {
 				<AuthWrapper>
 					<Routes>
 						<Route index element={<Calendar windows={windows} />} />
-						<Route
-							path="/window/:day"
-							element={<WindowRenderer />}
-						/>
+						<Route path="/window/:day" element={<WindowRenderer />} />
 						<Route path="/admin">
 							<Route index element={<AdminPanel />} />
 							<Route path="login" element={<AdminLogin />} />
 							<Route path="edit/:day" element={<Edit />} />
+						</Route>
+						<Route path="/pdf">
+							<Route index element={<PdfWindow />} />
 						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>

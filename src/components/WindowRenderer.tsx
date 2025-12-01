@@ -17,7 +17,8 @@ export default function WindowRenderer() {
 	const window = windows?.find((w) => w.day === dayNumber);
 
 	if (!window) return <p>Window not found</p>;
-	if (window.locked) return <h3 className="text-center text-2xl">{getRandomString(LOCKED_STRINGS)} 🎁</h3>;
+	if (import.meta.env.MODE === "production" && window.locked)
+		return <h3 className="text-center text-2xl">{getRandomString(LOCKED_STRINGS)} 🎁</h3>;
 
 	switch (window.type) {
 		case "text":
