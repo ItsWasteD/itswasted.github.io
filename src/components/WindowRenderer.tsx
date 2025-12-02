@@ -4,20 +4,27 @@ import ImageWindow from "./windows/ImageWindow";
 import { getRandomString } from "../util/generator";
 import { LOCKED_STRINGS } from "../constants";
 import TextWindow from "./windows/TextWindow";
+import { useEffect } from "react";
 
 export default function WindowRenderer() {
-	const { windows } = useApiContext();
+	const { windows, isAdmin, checkAdmin } = useApiContext();
 	const { day } = useParams<{ day: string }>();
 	const dayNumber = Number(day);
+
+	useEffect(() => {
+		checkAdmin();
+	}, [checkAdmin]);
 
 	if (isNaN(dayNumber) || dayNumber < 1 || dayNumber > 24) {
 		return <Navigate to="/" replace />;
 	}
 
+	if (!windows) return <p>Loading...</p>;
+
 	const window = windows?.find((w) => w.day === dayNumber);
 
 	if (!window) return <p>Window not found</p>;
-	if (import.meta.env.MODE === "production" && window.locked)
+	if (import.meta.env.MODE === "production" && window.locked && !isAdmin)
 		return <h3 className="text-center text-2xl">{getRandomString(LOCKED_STRINGS)} 🎁</h3>;
 
 	switch (window.type) {

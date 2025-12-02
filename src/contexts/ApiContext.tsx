@@ -99,6 +99,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 			credentials: "include",
 		});
 
+		setIsAdmin(res.ok);
 		return res.ok;
 	}, []);
 
