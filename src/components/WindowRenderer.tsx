@@ -5,6 +5,8 @@ import { getRandomString } from "../util/generator";
 import { LOCKED_STRINGS } from "../constants";
 import TextWindow from "./windows/TextWindow";
 import { useEffect } from "react";
+import AudioWindow from "./windows/AudioWindow";
+import PdfWindow from "./windows/PdfWindow";
 
 export default function WindowRenderer() {
 	const { windows, isAdmin, checkAdmin } = useApiContext();
@@ -32,6 +34,10 @@ export default function WindowRenderer() {
 			return <TextWindow data={window} />;
 		case "image":
 			return <ImageWindow data={window} />;
+		case "audio":
+			return <AudioWindow data={window} />;
+		case "pdf":
+			return <PdfWindow data={window} />;
 		default:
 			return <h1>Unknown window type</h1>;
 	}

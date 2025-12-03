@@ -14,11 +14,11 @@ type WindowOf<Type extends string, Content> = BaseWindowType & {
 
 export type TextWindowType = WindowOf<"text", { header?: string; text: string }>;
 export type ImageWindowType = WindowOf<"image", { header?: string; text?: string; imagePath: string }>;
-export type PdfWindowType = WindowOf<"pdf", { pdfPath: string }>;
+export type PdfWindowType = WindowOf<"pdf", { header?: string; pdfPath: string }>;
+export type AudioWindowType = WindowOf<"audio", { text: string; audioPath: string }>;
 export type VideoWindowType = WindowOf<"video", { videoPath: string }>;
-export type GifWindowType = WindowOf<"gif", { gifPath: string }>;
 
-export type CalendarWindowType = TextWindowType | ImageWindowType | PdfWindowType | VideoWindowType | GifWindowType;
+export type CalendarWindowType = TextWindowType | ImageWindowType | PdfWindowType | AudioWindowType | VideoWindowType;
 
 export type WindowType = CalendarWindowType["type"];
-export const WINDOW_TYPES = ["text", "image", "pdf", "video", "gif"] as const satisfies WindowType[];
+export const WINDOW_TYPES = ["text", "image", "pdf", "audio", "video"] as const satisfies WindowType[];
