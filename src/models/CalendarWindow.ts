@@ -14,7 +14,7 @@ type WindowOf<Type extends string, Content> = BaseWindowType & {
 
 export type TextWindowType = WindowOf<"text", { header?: string; text: string }>;
 export type ImageWindowType = WindowOf<"image", { header?: string; text?: string; imagePath: string }>;
-export type PdfWindowType = WindowOf<"pdf", { header?: string; pdfPath: string }>;
+export type PdfWindowType = WindowOf<"pdf", { header?: string; text?: string; pdfPath: string }>;
 export type AudioWindowType = WindowOf<"audio", { text: string; audioPath: string }>;
 export type VideoWindowType = WindowOf<"video", { videoPath: string }>;
 
