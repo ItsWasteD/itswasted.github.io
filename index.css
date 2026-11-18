@@ -1,0 +1,14 @@
+main > div {
+	padding: 16px;
+	border: 1px solid black;
+	flex: 1 1 0;
+	box-shadow:
+		0 0 0 2px gray,
+		inset 0 0 0 2px lightgray;
+}
+
+main {
+	display: flex;
+	flex-direction: row;
+	gap: 32px;
+}
